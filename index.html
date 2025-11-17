@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,40 +8,58 @@
     <style>
         /* Estilos básicos */
         body {
-          background-color: rgb(128, 128, 128); /* Fondo gris */
+            background-color: rgb(128, 128, 128);
+            /* Fondo gris */
         }
+
         canvas {
-          border: 4px solid white;
-          border-bottom: transparent; /* Permite que la bola 'se vaya' por abajo */ 
-          background: black;
-          margin: 0 auto;
-          display: block; /* Para centrar el canvas */
+            border: 4px solid white;
+            border-bottom: transparent;
+            /* Permite que la bola 'se vaya' por abajo */
+            background: black;
+            margin: 0 auto;
+            display: block;
+            /* Para centrar el canvas */
         }
-        </style>
+    </style>
 </head>
+
 <body>
     <canvas></canvas>
 </body>
 <script>
 
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d'); // Recupera el contexto 2D [4, 5]
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext('2d'); // Recupera el contexto 2D [4, 5]
 
-canvas.width = 480; // Ancho del Canvas (ejemplo de dimensión) [6]
-canvas.height = 400; // Alto del Canvas (ejemplo de dimensión) [6]
-
-
-function draw() {
-  // 1. Limpiar el Canvas (se implementa más adelante) [9]
-  // 2. Dibujar elementos (pelota, paleta, ladrillos) [10]
-  // 3. Chequear colisiones y movimientos [11]
-  
-  window.requestAnimationFrame(draw); 
-  // Sincronizado con el refresco de la pantalla (típicamente 60 veces por segundo) [12]
-}
-
-draw(); // Inicializa el bucle infinito [12]
+    canvas.width = 480; // Ancho del Canvas (ejemplo de dimensión) [6]
+    canvas.height = 400; // Alto del Canvas (ejemplo de dimensión) [6]
 
 
+    function draw() {
+        // 1. Limpiar el Canvas (se implementa más adelante) [9]
+        // 2. Dibujar elementos (pelota, paleta, ladrillos) [10]
+        // 3. Chequear colisiones y movimientos [11]
+
+        window.requestAnimationFrame(draw);
+        // Sincronizado con el refresco de la pantalla (típicamente 60 veces por segundo) [12]
+    }
+
+    draw(); // Inicializa el bucle infinito [12]
+
+    const ballRadius = 3;
+    let x = canvas.width / 2; // Posición X inicial (centro) [14]
+    let y = canvas.height - 30; // Posición Y inicial (cerca del fondo) [14, 15]
+    let dx = 2; // Dirección horizontal (velocidad) [16]
+    let dy = -2; // Dirección vertical (negativo para ir hacia arriba) [16]
+
+    function drawBall() {
+        ctx.beginPath(); // Comienza un nuevo trazado [17]
+        ctx.arc(x, y, ballRadius, 0, Math.PI * 2); // Dibuja un círculo completo [18, 19]
+        ctx.fillStyle = "white"; // Color de relleno [19]
+        ctx.fill(); // Rellena el círculo [19]
+        ctx.closePath(); // Cierra el trazado [20]
+    }
 </script>
+
 </html>
