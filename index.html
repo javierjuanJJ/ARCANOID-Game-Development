@@ -64,6 +64,25 @@
         // Limpia el rectángulo desde 0,0 hasta el ancho y alto total del canvas [9]
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+    function drawBallMovement() {
+        // Colisiones laterales (pared derecha e izquierda) [23, 24]
+        if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+            dx = -dx; // Invierte la dirección X [23]
+        }
+
+        // Colisión en la parte superior [25]
+        if (y + dy < ballRadius) {
+            dy = -dy; // Invierte la dirección Y [25]
+        } else if (y + dy > canvas.height - ballRadius) {
+            // Game Over si toca el suelo (parte inferior) [26, 27]
+            console.log("Game Over");[26]
+            document.location.reload(); // Reinicia la página [26]
+        }
+
+        // Actualización de la posición [27]
+        x += dx;
+        y += dy;
+    }
 </script>
 
 </html>
