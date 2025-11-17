@@ -60,6 +60,10 @@
         ctx.fill(); // Rellena el círculo [19]
         ctx.closePath(); // Cierra el trazado [20]
     }
+    function CleanCanvas() {
+        // Limpia el rectángulo desde 0,0 hasta el ancho y alto total del canvas [9]
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 </script>
 
 </html>
