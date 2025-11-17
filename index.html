@@ -83,6 +83,16 @@
         x += dx;
         y += dy;
     }
+    const paddleWidth = 50;
+    const paddleHeight = 10;
+    let paddleX = (canvas.width - paddleWidth) / 2; // Centrado horizontalmente [29]
+    const paddleY = canvas.height - paddleHeight; // Posición Y (altura) [29]
+
+    function drawPaddle() {
+        ctx.fillStyle = "red"; // Color de la paleta [30]
+        // Dibuja un rectángulo en X, Y, Ancho, Alto [30]
+        ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+    }
 </script>
 
 </html>
