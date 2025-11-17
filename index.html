@@ -115,6 +115,28 @@
         document.addEventListener("keyup", keyUpHandler, false);
     }
     initEvents();
+
+    function keyDownHandler(e) {
+        if (e.key === "Right" || e.key === "ArrowRight") {
+            rightPress = true;
+        } else if (e.key === "Left" || e.key === "ArrowLeft") {
+            leftPress = true;
+        }
+    }
+
+    function keyUpHandler(e) {
+        if (e.key === "Right" || e.key === "ArrowRight") {
+            rightPress = false;
+        } else if (e.key === "Left" || e.key === "ArrowLeft") {
+            leftPress = false;
+        }
+    }
+
+    function initEvents() {
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+    }
+    initEvents();
 </script>
 
 </html>
