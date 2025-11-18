@@ -78,65 +78,79 @@
             console.log("Game Over");[26]
             document.location.reload(); // Reinicia la página [26]
         }
+        else if (y + dy > paddleY) { // Si la pelota alcanza la altura de la paleta [43]
 
-        // Actualización de la posición [27]
-        x += dx;
-        y += dy;
-    }
-    const paddleWidth = 50;
-    const paddleHeight = 10;
-    let paddleX = (canvas.width - paddleWidth) / 2; // Centrado horizontalmente [29]
-    const paddleY = canvas.height - paddleHeight; // Posición Y (altura) [29]
+            // Condición 1: La posición X de la pelota está dentro del ancho de la paleta [44]
+            const isBallSameXasPaddle = x > paddleX && x < paddleX + paddleWidth;
 
-    function drawPaddle() {
-        ctx.fillStyle = "red"; // Color de la paleta [30]
-        // Dibuja un rectángulo en X, Y, Ancho, Alto [30]
-        ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
-    }
+            // Condición 2: La pelota está tocando la paleta en el eje Y [43, 45]
+            const isBallTouchingPaddle = y + dy > paddleY;
 
-    function keyDownHandler(e) {
-        if (e.key === "Right" || e.key === "ArrowRight") {
-            rightPress = true;
-        } else if (e.key === "Left" || e.key === "ArrowLeft") {
-            leftPress = true;
+            if (isBallSameXasPaddle && isBallTouchingPaddle) {
+                dy = -dy; // Rebotar hacia arriba [42]
+            } else if (y + dy > canvas.height - ballRadius) {
+                // Game Over si no golpea la pala [41]
+                document.location.reload();
+            }
+
+            // Actualización de la posición [27]
+            x += dx;
+            y += dy;
         }
-    }
+        const paddleWidth = 50;
+        const paddleHeight = 10;
+        let paddleX = (canvas.width - paddleWidth) / 2; // Centrado horizontalmente [29]
+        const paddleY = canvas.height - paddleHeight; // Posición Y (altura) [29]
 
-    function keyUpHandler(e) {
-        if (e.key === "Right" || e.key === "ArrowRight") {
-            rightPress = false;
-        } else if (e.key === "Left" || e.key === "ArrowLeft") {
-            leftPress = false;
+        function drawPaddle() {
+            ctx.fillStyle = "red"; // Color de la paleta [30]
+            // Dibuja un rectángulo en X, Y, Ancho, Alto [30]
+            ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
         }
-    }
 
-    function initEvents() {
-        document.addEventListener("keydown", keyDownHandler, false);
-        document.addEventListener("keyup", keyUpHandler, false);
-    }
-    initEvents();
-
-    function keyDownHandler(e) {
-        if (e.key === "Right" || e.key === "ArrowRight") {
-            rightPress = true;
-        } else if (e.key === "Left" || e.key === "ArrowLeft") {
-            leftPress = true;
+        function keyDownHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                rightPress = true;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                leftPress = true;
+            }
         }
-    }
 
-    function keyUpHandler(e) {
-        if (e.key === "Right" || e.key === "ArrowRight") {
-            rightPress = false;
-        } else if (e.key === "Left" || e.key === "ArrowLeft") {
-            leftPress = false;
+        function keyUpHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                rightPress = false;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                leftPress = false;
+            }
         }
-    }
 
-    function initEvents() {
-        document.addEventListener("keydown", keyDownHandler, false);
-        document.addEventListener("keyup", keyUpHandler, false);
-    }
-    initEvents();
+        function initEvents() {
+            document.addEventListener("keydown", keyDownHandler, false);
+            document.addEventListener("keyup", keyUpHandler, false);
+        }
+        initEvents();
+
+        function keyDownHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                rightPress = true;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                leftPress = true;
+            }
+        }
+
+        function keyUpHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                rightPress = false;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                leftPress = false;
+            }
+        }
+
+        function initEvents() {
+            document.addEventListener("keydown", keyDownHandler, false);
+            document.addEventListener("keyup", keyUpHandler, false);
+        }
+        initEvents();
 </script>
 
 </html>
