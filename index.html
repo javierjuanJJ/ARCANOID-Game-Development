@@ -151,6 +151,20 @@
             document.addEventListener("keyup", keyUpHandler, false);
         }
         initEvents();
+
+    }
+
+    const paddleSensitivity = 8;
+    function drawPaddleMovement() {
+        // Mover a la derecha, chequeando límite [37, 39]
+        if (rightPress && paddleX < canvas.width - paddleWidth) {
+            paddleX += paddleSensitivity;
+        }
+        // Mover a la izquierda, chequeando límite (0) [37]
+        else if (leftPress && paddleX > 0) {
+            paddleX -= paddleSensitivity;
+        }
+    }
 </script>
 
 </html>
