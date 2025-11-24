@@ -25,6 +25,8 @@
 </head>
 
 <body>
+    <img src="path/to/paddle_sprite.png" id="spriteArcano" hidden /> [46]
+    <img src="path/to/bricks_sprite.png" id="spriteBricks" hidden /> [46]
     <canvas></canvas>
 </body>
 <script>
@@ -34,6 +36,47 @@
 
     canvas.width = 480; // Ancho del Canvas (ejemplo de dimensión) [6]
     canvas.height = 400; // Alto del Canvas (ejemplo de dimensión) [6]
+
+    const sprite = document.querySelector('#spriteArcano');
+    const bricksSprite = document.querySelector('#spriteBricks');
+
+    const brickRowCount = 6;
+    const brickColumnCount = 13;
+    const brickWidth = 30;
+    const brickHeight = 14;
+    const brickPadding = 10;
+    const brickOffsetTop = 30;
+    const brickOffsetLeft = 30;
+
+    const brickStatus = { // Constantes de estado [54, 55]
+        ACTIVE: 1,
+        DESTROYED: 0
+    };
+
+    const bricks = []; // Matriz de ladrillos [52]
+
+    for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = []; // Inicializa la columna [53]
+        for (let r = 0; r < brickRowCount; r++) {
+
+            // Cálculo de posición X [56]
+            const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+
+            // Cálculo de posición Y [57]
+            const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+
+            // Asignación de color/índice aleatorio [58]
+            const randomColorIndex = Math.floor(Math.random() * 8);
+
+            // Objeto ladrillo [54, 59]
+            bricks[c][r] = {
+                x: brickX,
+                y: brickY,
+                status: brickStatus.ACTIVE,
+                color: randomColorIndex // Índice para el sprite [60, 61]
+            };
+        }
+    }
 
 
     function draw() {
@@ -59,6 +102,57 @@
         ctx.fillStyle = "white"; // Color de relleno [19]
         ctx.fill(); // Rellena el círculo [19]
         ctx.closePath(); // Cierra el trazado [20]
+    }
+    function drawBricks() {
+        for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowCount; r++) {
+                const currentBrick = bricks[c][r];
+
+                if (currentBrick.status === brickStatus.DESTROYED) {
+                    continue; // Si está destruido, no dibujar [65]
+                }
+
+                // Cálculo dinámico del recorte X (cada ladrillo ocupa 32 píxeles) [63]
+                const clipX = currentBrick.color * 32;
+                const clipY = 0;
+
+                // Se utiliza bricksSprite (la imagen con los ladrillos de colores) [64]
+                ctx.drawImage(
+                    bricksSprite,
+                    clipX, clipY, 31, 14, // Recorte: usando dimensiones ajustadas de la imagen [66]
+                    currentBrick.x, currentBrick.y, // Posición en el Canvas [66]
+                    brickWidth, brickHeight // Tamaño de dibujo [66]
+                );
+
+                /* Si se usara solo color sólido y borde:
+                ctx.fillStyle = currentBrick.color;
+                ctx.fillRect(currentBrick.x, currentBrick.y, brickWidth, brickHeight); [67]
+                ctx.strokeRect(currentBrick.x, currentBrick.y, brickWidth, brickHeight); [67]
+                */
+            }
+        }
+    }
+    function collisionDetection() {
+        for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowCount; r++) {
+                const currentBrick = bricks[c][r];
+
+                if (currentBrick.status === brickStatus.DESTROYED) {
+                    continue;
+                }
+
+                // 1. Chequeo horizontal: La pelota está entre el inicio y el fin del ladrillo [69]
+                const isBallSameXasBrick = x > currentBrick.x && x < currentBrick.x + brickWidth;
+
+                // 2. Chequeo vertical: La pelota está entre el inicio y el fin del ladrillo [70]
+                const isBallSameYasBrick = y > currentBrick.y && y < currentBrick.y + brickHeight;
+
+                if (isBallSameXasBrick && isBallSameYasBrick) {
+                    dy = -dy; // Rebotar la pelota [70]
+                    currentBrick.status = brickStatus.DESTROYED; // Marcar el ladrillo como destruido [70]
+                }
+            }
+        }
     }
     function CleanCanvas() {
         // Limpia el rectángulo desde 0,0 hasta el ancho y alto total del canvas [9]
@@ -92,6 +186,21 @@
                 // Game Over si no golpea la pala [41]
                 document.location.reload();
             }
+            else if (y + dy > paddleY) { // Si la pelota alcanza la altura de la paleta [43]
+
+                // Condición 1: La posición X de la pelota está dentro del ancho de la paleta [44]
+                const isBallSameXasPaddle = x > paddleX && x < paddleX + paddleWidth;
+
+                // Condición 2: La pelota está tocando la paleta en el eje Y [43, 45]
+                const isBallTouchingPaddle = y + dy > paddleY;
+
+                if (isBallSameXasPaddle && isBallTouchingPaddle) {
+                    dy = -dy; // Rebotar hacia arriba [42]
+                } else if (y + dy > canvas.height - ballRadius) {
+                    // Game Over si no golpea la pala [41]
+                    document.location.reload();
+                }
+            }
 
             // Actualización de la posición [27]
             x += dx;
@@ -106,7 +215,21 @@
             ctx.fillStyle = "red"; // Color de la paleta [30]
             // Dibuja un rectángulo en X, Y, Ancho, Alto [30]
             ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+
+            // Coordenadas de recorte (clip) dentro de la imagen de sprite [49, 50]
+            const clipX = 29;
+            const clipY = 174;
+            const clipWidth = paddleWidth;
+            const clipHeight = paddleHeight;
+
+            ctx.drawImage(
+                sprite,
+                clipX, clipY, clipWidth, clipHeight, // Recorte de la imagen fuente [48]
+                paddleX, paddleY, // Posición en el Canvas [48]
+                paddleWidth, paddleHeight // Tamaño final de dibujo [48]
+            );
         }
+
 
         function keyDownHandler(e) {
             if (e.key === "Right" || e.key === "ArrowRight") {
